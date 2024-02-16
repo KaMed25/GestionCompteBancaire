@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp5
+﻿namespace AccountValue
 {
     public abstract class ExchangeRateProvider
     {
