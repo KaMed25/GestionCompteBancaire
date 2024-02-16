@@ -57,7 +57,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApp5\AccountValue.csproj">
+    <ProjectReference Include="..\AccountValue\AccountValue.csproj">
       <Project>{aca96b97-ce58-4e0d-8df8-b15bce8f1fd7}</Project>
       <Name>AccountValue</Name>
     </ProjectReference>
