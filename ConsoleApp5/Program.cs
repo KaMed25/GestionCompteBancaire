@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ConsoleApp5
+namespace AccountValue
 {
     class Program
     {
