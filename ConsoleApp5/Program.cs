@@ -14,7 +14,7 @@ namespace ConsoleApp5
 
             // Convert the inputDate to valid DateTime and Get the Account Value
             DateTime targetDate;
-            if (DateTime.TryParseExact(inputDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out targetDate))
+            if (DateTime.TryParseExact(inputDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out targetDate) && IsInputDateWithinRange(targetDate))
             {
                 // Load only Transaction for the given date from Account.csv file
                 var transactionManager = new Transaction();
@@ -28,8 +28,12 @@ namespace ConsoleApp5
             }
             else
             {
-                Console.WriteLine("Format de date incorrect.");
+                Console.WriteLine("Format de date incorrect ou ne respecte pas l'interval souhaité.");
             }
+        }
+        public static bool IsInputDateWithinRange(DateTime targetDate)
+        {
+            return targetDate >= DateTime.ParseExact("01/01/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture) && targetDate <= DateTime.ParseExact("01/03/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
     }
 }
