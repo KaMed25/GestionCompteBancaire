@@ -6,13 +6,33 @@ using System.Threading.Tasks;
 
 namespace AccountValue
 {
+    /// <summary>
+    /// Class for get the exchange rate from any currency to Euro
+    /// </summary>
     public class ExchangeRate : ExchangeRateProvider
     {
-        public override decimal GetExchangeRateToEuro(string devise)
+        public override decimal GetExchangeRateToEuro(Currency currency)
         {
-            if (devise == "JPY") return 0.482m;
-            if (devise == "USD") return 1.445m;
-            return 1.0m;
+            switch (currency)
+            {
+                case Currency.JPY:
+                    return 0.482m;
+                case Currency.USD:
+                    return 1.445m;
+                default:
+                    return 1.0m;
+            }
         }
+    }
+
+    /// <summary>
+    /// Enumerator for world currencies
+    /// </summary>
+    public enum Currency
+    {
+        EUR,
+        JPY,
+        USD,
+        Default=EUR,
     }
 }

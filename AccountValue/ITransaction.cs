@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace AccountValue
 {
+    /// <summary>
+    /// Interface of class transaction
+    /// </summary>
     public interface ITransaction
     {
         /// <summary>
