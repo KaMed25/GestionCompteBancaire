@@ -6,18 +6,24 @@ using System.Linq;
 
 namespace AccountValue
 {
+    /// <summary>
+    /// This class handle transactions and calculate the value of an account
+    /// </summary>
     public class Transaction : ITransaction
     {
         public DateTime Date { get; set; }
         public decimal Montant { get; set; }
-        public string Devise { get; set; }
+        public Currency Devise { get; set; }
         public string Category { get; set; }
 
-        public Transaction()
+        private readonly ExchangeRateProvider _exchangeRateProvider;
+
+        public Transaction(ExchangeRateProvider exchangeRateProvider)
         {
+            _exchangeRateProvider = exchangeRateProvider;
         }
 
-        public Transaction(DateTime date, decimal montant, string devise, string category)
+        public Transaction(DateTime date, decimal montant, Currency devise, string category)
         {
             Date = date;
             Montant = montant;
@@ -41,9 +47,20 @@ namespace AccountValue
                 foreach (string line in lines.Skip(4)) // Ignore currency and initial amount lines
                 {
                     string[] values = line.Split(';');
-                    DateTime date = DateTime.ParseExact(values[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime date;
+                    if (!DateTime.TryParseExact(values[0], "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                    {
+                        Console.WriteLine($"Error parsing date: {values[0]}");
+                        continue;
+                    }
+                    
                     decimal montant = decimal.Parse(values[1], CultureInfo.InvariantCulture);
-                    string devise = values[2];
+                    if (!decimal.TryParse(values[1], NumberStyles.Any, CultureInfo.InvariantCulture, out montant))
+                    {
+                        Console.WriteLine($"Error parsing montant: {values[1]}");
+                        continue;
+                    }
+                    Currency devise = Enum.TryParse(values[2], out Currency result)? result : Currency.Default;
                     string category = values[3];
                     
                     if (date <= targetDate)
@@ -67,14 +84,14 @@ namespace AccountValue
         public decimal GetAccountValue(List<Transaction> transactions)
         {
             
-            var exchangeRateProvider = new ExchangeRate();
+            //var exchangeRateProvider = new ExchangeRate();
 
             //Initial balance
             decimal accountValue = 8300.00m;
 
             foreach (Transaction transaction in transactions)
             {
-                accountValue += transaction.Montant * exchangeRateProvider.GetExchangeRateToEuro(transaction.Devise);
+                accountValue += transaction.Montant * this._exchangeRateProvider.GetExchangeRateToEuro(transaction.Devise) ;
             }
 
             return Math.Round(accountValue,2);
